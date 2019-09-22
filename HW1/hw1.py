@@ -31,7 +31,6 @@ def is_in_month(date):
         else:
             focus_month = str(cmp_obj.year) + str(int(cmp_obj.month))
 
-    print(date, datetime_obj.day, datetime_obj.month, 'focus month ', focus_month)
     return focus_month
 
 with open(sys.argv[1], encoding = 'big5') as f:
@@ -43,12 +42,11 @@ with open(sys.argv[1], encoding = 'big5') as f:
     for each_row in all_data:
         if row_idx:
             if str(each_row[1][0:2]) == 'TX':
-                #print('len ', len(each_row[2][0:6]), ' ', len(focus_month[0:6]))
-                print('row2', each_row[2][0:6], '|', focus_month[0:6], '|')
                 if flg == 0 and '/' not in each_row[2] and int(each_row[3]) == 84500:
                     focus_month = is_in_month(each_row[0])
                     flg = 1
-                if int(each_row[3]) >= 84500 and int(each_row[3]) <= 134500 and each_row[2][0:6] == focus_month[0:6]:
+                if int(each_row[3]) >= 84500 and int(each_row[3]) <= 134500 \
+                and '/' not in each_row[2] and each_row[2][0:6] == focus_month[0:6]:
                     parsed_data.append(int(each_row[4]))
 
         row_idx += 1
