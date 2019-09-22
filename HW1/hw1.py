@@ -7,10 +7,10 @@ from datetime import datetime, timedelta
 
 parsed_data = []
 def nth_weekday(date, week, day):
-    tmp = date.replace(day = 1)
-    adj = (day - tmp.weekday()) % 7
-    tmp += timedelta(days = adj)
-    tmp += timedelta(weeks = week - 1)
+    tmp = date.replace(day = 1) # restart from month
+    adj = (day - tmp.weekday()) % 7 # weekday shift
+    tmp += timedelta(days = adj) # shift to specified day of first week
+    tmp += timedelta(weeks = week - 1) # shift to specified day of specified weel count
     return tmp
 
 def is_in_month(date):
