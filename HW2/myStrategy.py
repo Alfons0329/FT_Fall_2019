@@ -1,11 +1,11 @@
-def myStrategy(pastData, currPrice, stockType):
+def myStrategy(pastData, currPrice, stockType, l, s):
     import numpy as np
 
     # param config starts here
     a = 0
     b = 3
-    w_l = 120
-    w_s = 5
+    w_l = l
+    w_s = s
     # param config ends here
     action = 0
     data_len = len(pastData)
@@ -47,6 +47,11 @@ def myStrategy(pastData, currPrice, stockType):
         else:
             action = 0
     else:
-        action = 1
+        if rsi_s > rsi_l:
+            action = 1
+        elif rsi_s < rsi_l:
+            action = 1
+        else:
+            action = 1
 
     return action

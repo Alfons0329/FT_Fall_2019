@@ -16,36 +16,68 @@ import pandas as pd
 import os, sys, csv
 
 # Implementation part of HW2
-def myStrategy(pastData, currPrice, stockType, w, a, b):
+def myStrategy(pastData, currPrice, stockType, l, s):
+    import numpy as np
+
+    # param config starts here
+    a = 0
+    b = 3
+    w_l = l
+    w_s = s
+    # param config ends here
     action = 0
     data_len = len(pastData)
 
-    if data_len < w:
+    if data_len < w_l:
         return 0
 
-    windowed_data = pastData[-w:]
-    weighted_sum = 0
-    weighted_len = 0
-    weighted_ma  = 0
+    # rsi index for estimation
+    windowed_data_l = pastData[-w_l:]
+    windowed_data_s = pastData[-w_s:]
 
-    for i in range(0, len(windowed_data)):
-        weighted_sum += windowed_data[i] * i
-        weighted_len += i
+    up = 0
+    down = 0
+    rsi_l = 0
+    rsi_s = 0
 
-    weighted_ma = weighted_sum / weighted_len
-    action = 0
-    if currPrice - a > weighted_ma:
-        action = 1
-    elif currPrice + b < weighted_ma:
-        action = -1
+    for i in range(w_l - 1):
+        if windowed_data_l[i] < windowed_data_l[i + 1]:
+            up += (windowed_data_l[i + 1] - windowed_data_l[i])
+        elif windowed_data_l[i] > windowed_data_l[i + 1]:
+            down += (windowed_data_l[i] - windowed_data_l[i + 1])
+
+    rsi_l = float((up + 1) / (up + down + 1))
+
+    up = down = 0
+    for i in range(w_s - 1):
+        if windowed_data_s[i] < windowed_data_s[i + 1]:
+            up += (windowed_data_s[i + 1] - windowed_data_s[i])
+        elif windowed_data_s[i] > windowed_data_s[i + 1]:
+            down += (windowed_data_s[i] - windowed_data_s[i + 1])
+
+    rsi_s = float((up + 1) / (up + down + 1))
+
+    if stockType[0:3] == 'IAU':
+        if rsi_s > rsi_l:
+            action = 1
+        elif rsi_s < rsi_l:
+            action = -1
+        else:
+            action = 0
     else:
-        action = 0
+        if rsi_s > rsi_l:
+            action = 1
+        elif rsi_s < rsi_l:
+            action = 1
+        else:
+            action = 1
 
     return action
 
+
 # Compute the return rate of my strategy, this code is from TA
 # Compute return rate over a given price vector, with 3 modifiable parameters
-def computeReturnRate(priceVec, stockType, windowSize, alpha, beta):
+def computeReturnRate(priceVec, stockType, l, s):
     capital=1000    # Initial available capital
     capitalOrig=capital     # original capital
     dataCount=len(priceVec)                # day size
@@ -57,7 +89,7 @@ def computeReturnRate(priceVec, stockType, windowSize, alpha, beta):
     # Run through each day
     for ic in range(dataCount):
         currentPrice=priceVec[ic]    # current price
-        suggestedAction[ic]=myStrategy(priceVec[0:ic], currentPrice, stockType, windowSize, alpha, beta)        # Obtain the suggested action
+        suggestedAction[ic]=myStrategy(priceVec[0:ic], currentPrice, stockType, l, s)        # Obtain the suggested action
         # get real action by suggested action
         if ic>0:
             stockHolding[ic]=stockHolding[ic-1]    # The stock holding from the previous day
@@ -83,39 +115,47 @@ if __name__=='__main__':
     returnRateBest=-1.00     # Init best return rate
     fileList = ['SPY.csv', 'DSI.csv', 'IAU.csv', 'LQD.csv'] # Init file names
     fileCount=len(fileList)
-
+    
+    # MA search algorithm
+    '''
     # Config search range
     windowSizeMin=200; windowSizeMax=500;    # Range of windowSize to explore
     alphaMin=0; alphaMax=30;            # Range of alpha to explore
     betaMin=0; betaMax=20;                # Range of beta to explore
 
     # Start exhaustive search
+    
     for windowSize in range(windowSizeMin, windowSizeMax+1):        # For-loop for windowSize
         for alpha in range(alphaMin, alphaMax+1):            # For-loop for alpha
             for beta in range(betaMin, betaMax+1):        # For-loop for beta
+    '''
+    
+    # RSI search algotrithm
+    lmin = 12; lmax = 240;
+    lbest = 0; sbest = 0;
+    for l in range(lmin, lmax):
+        for s in range(5, l):
+            # Evaluate the current confg
+            rr=np.zeros((fileCount,1))
+            
+            for ic in range(fileCount):
+                file=fileList[ic];
+                df=pd.read_csv(file)
+                adjClose=df["Adj Close"].values    # Get adj close as the price vector
+                stockType=file[-7:-4]        # Get stock type
+                rr[ic]=computeReturnRate(adjClose, stockType, l, s)    # Compute return rate
+                print("File=%s ==> rr=%f" %(file, rr[ic]));
+            
+            returnRate = np.mean(rr)
+            print("Current settings: l=%d, s=%d ==> avgReturnRate=%f" %(l, s, returnRate))        # Print the best result
+            
+            if returnRate>returnRateBest:        # Keep the best parameters
+                lbest=l
+                sbest=s
+                returnRateBest=returnRate
+                print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))        # Print the best result
 
-                # Evaluate the current confg
-                rr=np.zeros((fileCount,1))
-                for ic in range(fileCount):
-                    file=fileList[ic];
-                    df=pd.read_csv(file)
-                    adjClose=df["Adj Close"].values    # Get adj close as the price vector
-                    stockType=file[-7:-4]        # Get stock type
-                    rr[ic]=computeReturnRate(adjClose, stockType, windowSize, alpha, beta)    # Compute return rate
-                    print("File=%s ==> rr=%f" %(file, rr[ic]));
+print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))        # Print the best result        # Print the best result
 
-                returnRate = np.mean(rr)
-                print("Current settings: windowSize=%d, alpha=%d, beta=%d ==> avgReturnRate=%f" %(windowSize, alpha, beta ,returnRate))        # Print the best result
-
-                returnRate = np.mean(rr)
-                if returnRate>returnRateBest:        # Keep the best parameters
-                    windowSizeBest=windowSize
-                    alphaBest=alpha
-                    betaBest=beta
-                    returnRateBest=returnRate
-                    print("Current best settings: windowSize=%d, alpha=%d, beta=%d ==> avgReturnRate=%f" %(windowSizeBest,alphaBest,betaBest,returnRateBest))        # Print the best result
-
-    print("Overall best settings: windowSize=%d, alpha=%d, beta=%d ==> bestReturnRate=%f" %(windowSizeBest,alphaBest,betaBest,returnRateBest))        # Print the best result
-
-   # with open('1011_weighted_ma.txt', 'w') as f:
-      # f.write()
+# with open('1011_weighted_ma.txt', 'w') as f:
+  # f.write()
