@@ -4,7 +4,7 @@ def myStrategy(pastData, currPrice, stockType):
     # param config starts here
     a = 0
     b = 3
-    w_l = 10
+    w_l = 120
     w_s = 5
     # param config ends here
     action = 0
@@ -28,7 +28,7 @@ def myStrategy(pastData, currPrice, stockType):
         elif windowed_data_l[i] > windowed_data_l[i + 1]:
             down += (windowed_data_l[i] - windowed_data_l[i + 1])
 
-    rsi_l = float((up) / (up + down))
+    rsi_l = float((up + 1) / (up + down + 1))
 
     up = down = 0
     for i in range(w_s - 1):
@@ -37,7 +37,7 @@ def myStrategy(pastData, currPrice, stockType):
         elif windowed_data_s[i] > windowed_data_s[i + 1]:
             down += (windowed_data_s[i] - windowed_data_s[i + 1])
 
-    rsi_s = float((up) / (up + down))
+    rsi_s = float((up + 1) / (up + down + 1))
 
     if stockType[0:3] == 'IAU':
         if rsi_s > rsi_l:
@@ -47,11 +47,6 @@ def myStrategy(pastData, currPrice, stockType):
         else:
             action = 0
     else:
-        if rsi_s > rsi_l:
-            action = -1
-        elif rsi_s < rsi_l:
-            action = 1
-        else:
-            action = 0
+        action = 1
 
     return action
