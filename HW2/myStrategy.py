@@ -18,9 +18,9 @@ def myStrategy(pastData, currPrice, stockType):
         a = 0.95
         b = 0.0
     elif stockType[0:3] == 'LQD':
-        l = 62
+        l = 6
         s = 4
-        a = 0.95
+        a = 0.8
         b = 0.0
     # stock-wise param config rnds here
 
