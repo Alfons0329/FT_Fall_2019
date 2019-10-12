@@ -9,16 +9,17 @@ but real separated csv file
 '''
 How my strategy is designed:
 
-'''
+    '''
 
 import numpy as np
 import pandas as pd
 import os, sys, csv
 
 # Implementation part of HW2
-def myStrategy(pastData, currPrice, stockType, l, s):
+def myStrategy(pastData, currPrice, stockType, l, s, a, b):
 
     # stock-wise param config starts here
+    '''
     if stockType[0:3] == 'SPY':
         l = 14
         s = 4
@@ -28,11 +29,15 @@ def myStrategy(pastData, currPrice, stockType, l, s):
     elif stockType[0:3] == 'IAU':
         l = 11
         s = 5
+    elif stockType[0:3] == 'LQD':
+        l = 62
+        s = 4
+    '''
     # stock-wise param config rnds here
 
     # param config starts here
-    a = 0
-    b = 3
+    alpha = a
+    beta = b
     w_l = l
     w_s = s
     # param config ends here
@@ -69,16 +74,16 @@ def myStrategy(pastData, currPrice, stockType, l, s):
     rsi_s = float((up + 1) / (up + down + 1))
 
     if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI' or stockType[0:3] == 'LQD':
-        if rsi_s > rsi_l:
+        if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
-        elif rsi_s < rsi_l:
+        elif rsi_s < rsi_l or rsi_s < beta:
             action = -1
         else:
             action = 0
     elif stockType[0:3] == 'SPY':
-        if rsi_s > rsi_l:
+        if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
-        elif rsi_s < rsi_l:
+        elif rsi_s < rsi_l or rsi_s < beta:
             action = 1
         else:
             action = 1
@@ -88,7 +93,7 @@ def myStrategy(pastData, currPrice, stockType, l, s):
 
 # Compute the return rate of my strategy, this code is from TA
 # Compute return rate over a given price vector, with 3 modifiable parameters
-def computeReturnRate(priceVec, stockType, l, s):
+def computeReturnRate(priceVec, stockType, l, s, a, b):
     capital=1000    # Initial available capital
     capitalOrig=capital     # original capital
     dataCount=len(priceVec)                # day size
@@ -100,7 +105,7 @@ def computeReturnRate(priceVec, stockType, l, s):
     # Run through each day
     for ic in range(dataCount):
         currentPrice=priceVec[ic]    # current price
-        suggestedAction[ic]=myStrategy(priceVec[0:ic], currentPrice, stockType, l, s)        # Obtain the suggested action
+        suggestedAction[ic]=myStrategy(priceVec[0:ic], currentPrice, stockType, l, s, a, b)        # Obtain the suggested action
         # get real action by suggested action
         if ic>0:
             stockHolding[ic]=stockHolding[ic-1]    # The stock holding from the previous day
@@ -143,32 +148,40 @@ if __name__=='__main__':
     '''
 
     # RSI search algotrithm
-    lmin = 2; lmax = 100;
+    lmin = 4; lmax = 250;
     lbest = 0; sbest = 0;
-    for l in range(lmin, lmax + 1):
-        for s in range(1, l + 1):
-            # Evaluate the current confg
-            rr=np.zeros((fileCount,1))
 
-            for ic in range(fileCount):
-                file=fileList[ic];
-                df=pd.read_csv(file)
-                adjClose=df["Adj Close"].values    # Get adj close as the price vector
-                stockType=file[-7:-4]        # Get stock type
-                rr[ic]=computeReturnRate(adjClose, stockType, l, s)    # Compute return rate
-                # print("File=%s ==> rr=%f" %(file, rr[ic]));
+    alist = np.arange(0.0, 1.0, 0.1)
+    blist = np.arange(0.0, 1.0, 0.1)
+    abest = 0; bbest = 0;
+    for l in range(lmin, lmax + 1, 2):
+        for s in range(3, min(30, lmin)):
+            for a in alist:
+                for b in blist:
+                    rr=np.zeros((fileCount,1))
+                    for ic in range(fileCount):
+                        file=fileList[ic];
+                        df=pd.read_csv(file)
+                        adjClose=df["Adj Close"].values    # Get adj close as the price vector
+                        stockType=file[-7:-4]        # Get stock type
+                        rr[ic]=computeReturnRate(adjClose, stockType, l, s, a, b)    # Compute return rate
+                        # print("File=%s ==> rr=%f" %(file, rr[ic]));
 
-            returnRate = np.mean(rr)
-            # print("Current settings: l=%d, s=%d ==> avgReturnRate=%f" %(l, s, returnRate))
+                    returnRate = np.mean(rr)
+                    if returnRate > returnRateBest:        # Keep the best parameters
+                        lbest = l
+                        sbest = s
+                        abest = a
+                        bbest = b
+                        returnRateBest=returnRate
+                        # print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))
+                        # print("Current best settings: a=%f, b=%f ==> avgReturnRate=%f" %(abest, bbest, returnRateBest))
+                        print(rr)
+                        print("Current best settings: l=%d, s=%d, a=%f, b=%f ==> avgReturnRate=%f" %(lbest, sbest, abest, bbest, returnRateBest))
 
-            if returnRate>returnRateBest:        # Keep the best parameters
-                lbest=l
-                sbest=s
-                returnRateBest=returnRate
-                print(rr)
-                print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))
-
-print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))
+# print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))
+# print("Overall best settings: a=%f, b=%f ==> bestReturnRate=%f" %(abest, bbest, returnRateBest))
+print("Overall best settings: l=%d, s=%d, a=%f, b=%f ==> avgReturnRate=%f" %(lbest, sbest, abest, bbest, returnRateBest))
 
 # with open('1011_weighted_ma.txt', 'w') as f:
   # f.write()
