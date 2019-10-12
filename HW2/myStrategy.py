@@ -3,10 +3,10 @@ def myStrategy(pastData, currPrice, stockType):
 
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
-        l = 6
-        s = 140
+        l = 9
+        s = 100
         a = 0.5
-        b = 0.5
+        b = 0.0
     elif stockType[0:3] == 'DSI':
         l = 6
         s = 4
@@ -62,7 +62,7 @@ def myStrategy(pastData, currPrice, stockType):
 
     rsi_s = float((up + 1) / (up + down + 1))
 
-    if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI' or stockType[0:3] == 'LQD':
+    if stockType[0:3] == 'IAU' or stockType[0:3] == 'LQD' or stockType[0:3] == 'DSI':
         if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
         elif rsi_s < rsi_l or rsi_s < beta:
@@ -70,9 +70,9 @@ def myStrategy(pastData, currPrice, stockType):
         else:
             action = 0
     elif stockType[0:3] == 'SPY':
-        if rsi_s > rsi_l or rsi_l > alpha:
+        if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
-        elif rsi_s < rsi_l or rsi_l < beta:
+        elif rsi_s < rsi_l or rsi_s < beta:
             action = -1
         else:
             action = 0

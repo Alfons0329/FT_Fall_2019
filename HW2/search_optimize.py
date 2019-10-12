@@ -15,32 +15,31 @@ from progress.bar import Bar
 def myStrategy(pastData, currPrice, stockType, l, s, a, b):
 
     # stock-wise param config starts here
-    '''
     if stockType[0:3] == 'SPY':
-        l = 14
-        s = 4
+        w_l = s
+        w_s = l
+        alpha = a
+        beta = b
     elif stockType[0:3] == 'DSI':
-        l = 6
-        s = 4
+        w_l = s
+        w_s = l
+        alpha = a
+        beta = b
     elif stockType[0:3] == 'IAU':
-        l = 11
-        s = 5
+        w_l = l
+        w_s = s
+        alpha = a
+        beta = b
     elif stockType[0:3] == 'LQD':
-        l = 62
-        s = 4
-    '''
+        w_l = l
+        w_s = s
+        alpha = a
+        beta = b
     # stock-wise param config rnds here
 
-    # param config starts here
-    alpha = a
-    beta = b
-    w_l = l
-    w_s = s
-    # param config ends here
     action = 0
     data_len = len(pastData)
-
-    if data_len < w_l:
+    if data_len < max(w_s, w_l):
         return 0
 
     # rsi index for estimation
@@ -80,7 +79,7 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
         if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
         elif rsi_s < rsi_l or rsi_s < beta:
-            action = 1
+            action = -1
         else:
             action = 1
 
