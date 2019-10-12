@@ -3,10 +3,10 @@ def myStrategy(pastData, currPrice, stockType):
 
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
-        l = 14
-        s = 4
-        a = 0.95
-        b = 0.0
+        l = 6
+        s = 140
+        a = 0.5
+        b = 0.5
     elif stockType[0:3] == 'DSI':
         l = 6
         s = 4
@@ -33,7 +33,7 @@ def myStrategy(pastData, currPrice, stockType):
     action = 0
     data_len = len(pastData)
 
-    if data_len < w_l:
+    if data_len < max(w_l, w_s):
         return 0
 
     # rsi index for estimation
@@ -70,11 +70,11 @@ def myStrategy(pastData, currPrice, stockType):
         else:
             action = 0
     elif stockType[0:3] == 'SPY':
-        if rsi_s > rsi_l or rsi_s > alpha:
+        if rsi_s > rsi_l or rsi_l > alpha:
             action = 1
-        elif rsi_s < rsi_l or rsi_s < beta:
-            action = 1
+        elif rsi_s < rsi_l or rsi_l < beta:
+            action = -1
         else:
-            action = 1
+            action = 0
 
     return action

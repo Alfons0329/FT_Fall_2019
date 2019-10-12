@@ -150,10 +150,10 @@ if __name__=='__main__':
     alist = np.arange(0.0, 1.0, 0.1)
     blist = np.arange(0.0, 1.0, 0.1)
     abest = 0; bbest = 0;
-    bar = Bar('Processing', max = 10 * 10 * 76 * 48)
+    bar = Bar('Processing', max = 10 * 10 * 75 * 48)
 
     for l in range(lmin, lmax + 1, 2):
-        for s in range(2, 50):
+        for s in range(2, 40):
             for a in alist:
                 for b in blist:
                     rr=np.zeros((fileCount,1))
