@@ -17,7 +17,23 @@ import os, sys, csv
 
 # Implementation part of HW2
 def myStrategy(pastData, currPrice, stockType, l, s):
-    import numpy as np
+
+    # stock-wise param config starts here
+    '''
+    if stockType[0:3] == 'SPY':
+        l = 13
+        s = 5
+    elif stockType[0:3] == 'DSI':
+        l = 25
+        s = 21
+    elif stockType[0:3] == 'IAU':
+        l = 27
+        s = 20
+    elif stockType[0:3] == 'LQD':
+        l = 13
+        s = 5
+    '''
+    # stock-wise param config rnds here
 
     # param config starts here
     a = 0
@@ -57,14 +73,14 @@ def myStrategy(pastData, currPrice, stockType, l, s):
 
     rsi_s = float((up + 1) / (up + down + 1))
 
-    if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI':
+    if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI' or stockType[0:3] == 'LQD':
         if rsi_s > rsi_l:
             action = 1
         elif rsi_s < rsi_l:
             action = -1
         else:
             action = 0
-    else:
+    elif stockType[0:3] == 'SPY':
         if rsi_s > rsi_l:
             action = 1
         elif rsi_s < rsi_l:
@@ -114,6 +130,7 @@ def computeReturnRate(priceVec, stockType, l, s):
 if __name__=='__main__':
     returnRateBest=-1.00     # Init best return rate
     fileList = ['SPY.csv', 'DSI.csv', 'IAU.csv', 'LQD.csv'] # Init file names
+    # fileList = ['LQD.csv'] # Init file names
     fileCount=len(fileList)
 
     # MA search algorithm
@@ -131,10 +148,10 @@ if __name__=='__main__':
     '''
 
     # RSI search algotrithm
-    lmin = 12; lmax = 240;
+    lmin = 2; lmax = 100;
     lbest = 0; sbest = 0;
-    for l in range(lmin, lmax):
-        for s in range(5, l):
+    for l in range(lmin, lmax + 1):
+        for s in range(1, l + 1):
             # Evaluate the current confg
             rr=np.zeros((fileCount,1))
 
