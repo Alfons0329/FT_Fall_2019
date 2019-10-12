@@ -57,7 +57,7 @@ def myStrategy(pastData, currPrice, stockType, l, s):
 
     rsi_s = float((up + 1) / (up + down + 1))
 
-    if stockType[0:3] == 'IAU':
+    if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI':
         if rsi_s > rsi_l:
             action = 1
         elif rsi_s < rsi_l:
@@ -115,7 +115,7 @@ if __name__=='__main__':
     returnRateBest=-1.00     # Init best return rate
     fileList = ['SPY.csv', 'DSI.csv', 'IAU.csv', 'LQD.csv'] # Init file names
     fileCount=len(fileList)
-    
+
     # MA search algorithm
     '''
     # Config search range
@@ -124,12 +124,12 @@ if __name__=='__main__':
     betaMin=0; betaMax=20;                # Range of beta to explore
 
     # Start exhaustive search
-    
+
     for windowSize in range(windowSizeMin, windowSizeMax+1):        # For-loop for windowSize
         for alpha in range(alphaMin, alphaMax+1):            # For-loop for alpha
             for beta in range(betaMin, betaMax+1):        # For-loop for beta
     '''
-    
+
     # RSI search algotrithm
     lmin = 12; lmax = 240;
     lbest = 0; sbest = 0;
@@ -137,25 +137,26 @@ if __name__=='__main__':
         for s in range(5, l):
             # Evaluate the current confg
             rr=np.zeros((fileCount,1))
-            
+
             for ic in range(fileCount):
                 file=fileList[ic];
                 df=pd.read_csv(file)
                 adjClose=df["Adj Close"].values    # Get adj close as the price vector
                 stockType=file[-7:-4]        # Get stock type
                 rr[ic]=computeReturnRate(adjClose, stockType, l, s)    # Compute return rate
-                print("File=%s ==> rr=%f" %(file, rr[ic]));
-            
+                # print("File=%s ==> rr=%f" %(file, rr[ic]));
+
             returnRate = np.mean(rr)
-            print("Current settings: l=%d, s=%d ==> avgReturnRate=%f" %(l, s, returnRate))        # Print the best result
-            
+            # print("Current settings: l=%d, s=%d ==> avgReturnRate=%f" %(l, s, returnRate))
+
             if returnRate>returnRateBest:        # Keep the best parameters
                 lbest=l
                 sbest=s
                 returnRateBest=returnRate
-                print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))        # Print the best result
+                print(rr)
+                print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))
 
-print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))        # Print the best result        # Print the best result
+print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))
 
 # with open('1011_weighted_ma.txt', 'w') as f:
   # f.write()

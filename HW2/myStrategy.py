@@ -1,5 +1,21 @@
-def myStrategy(pastData, currPrice, stockType, l, s):
+#def myStrategy(pastData, currPrice, stockType, l, s):
+def myStrategy(pastData, currPrice, stockType):
     import numpy as np
+
+    # stock-wise param config starts here
+    if stockType[0:3] == 'SPY':
+        l = 13
+        s = 5
+    elif stockType[0:3] == 'DSI':
+        l = 25
+        s = 21
+    elif stockType[0:3] == 'IAU':
+        l = 27
+        s = 20
+    elif stockType[0:3] == 'LQD':
+        l = 13
+        s = 5
+    # stock-wise param config rnds here
 
     # param config starts here
     a = 0
@@ -7,6 +23,7 @@ def myStrategy(pastData, currPrice, stockType, l, s):
     w_l = l
     w_s = s
     # param config ends here
+
     action = 0
     data_len = len(pastData)
 
@@ -39,7 +56,7 @@ def myStrategy(pastData, currPrice, stockType, l, s):
 
     rsi_s = float((up + 1) / (up + down + 1))
 
-    if stockType[0:3] == 'IAU':
+    if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI':
         if rsi_s > rsi_l:
             action = 1
         elif rsi_s < rsi_l:
