@@ -6,14 +6,10 @@ Work progress:
 but real separated csv file
 '''
 
-'''
-How my strategy is designed:
-
-    '''
-
 import numpy as np
 import pandas as pd
 import os, sys, csv
+from progress.bar import Bar
 
 # Implementation part of HW2
 def myStrategy(pastData, currPrice, stockType, l, s, a, b):
@@ -148,14 +144,16 @@ if __name__=='__main__':
     '''
 
     # RSI search algotrithm
-    lmin = 4; lmax = 250;
+    lmin = 100; lmax = 250;
     lbest = 0; sbest = 0;
 
     alist = np.arange(0.0, 1.0, 0.1)
     blist = np.arange(0.0, 1.0, 0.1)
     abest = 0; bbest = 0;
+    bar = Bar('Processing', max = 10 * 10 * 76 * 48)
+
     for l in range(lmin, lmax + 1, 2):
-        for s in range(3, min(30, lmin)):
+        for s in range(2, 50):
             for a in alist:
                 for b in blist:
                     rr=np.zeros((fileCount,1))
@@ -165,7 +163,7 @@ if __name__=='__main__':
                         adjClose=df["Adj Close"].values    # Get adj close as the price vector
                         stockType=file[-7:-4]        # Get stock type
                         rr[ic]=computeReturnRate(adjClose, stockType, l, s, a, b)    # Compute return rate
-                        # print("File=%s ==> rr=%f" %(file, rr[ic]));
+                        #print("File=%s ==> rr=%f" %(file, rr[ic]));
 
                     returnRate = np.mean(rr)
                     if returnRate > returnRateBest:        # Keep the best parameters
@@ -178,6 +176,7 @@ if __name__=='__main__':
                         # print("Current best settings: a=%f, b=%f ==> avgReturnRate=%f" %(abest, bbest, returnRateBest))
                         print(rr)
                         print("Current best settings: l=%d, s=%d, a=%f, b=%f ==> avgReturnRate=%f" %(lbest, sbest, abest, bbest, returnRateBest))
+                    bar.next() # advance progress bar
 
 # print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))
 # print("Overall best settings: a=%f, b=%f ==> bestReturnRate=%f" %(abest, bbest, returnRateBest))
