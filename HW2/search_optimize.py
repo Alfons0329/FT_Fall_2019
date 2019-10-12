@@ -19,20 +19,15 @@ import os, sys, csv
 def myStrategy(pastData, currPrice, stockType, l, s):
 
     # stock-wise param config starts here
-    '''
     if stockType[0:3] == 'SPY':
-        l = 13
-        s = 5
+        l = 14
+        s = 4
     elif stockType[0:3] == 'DSI':
-        l = 25
-        s = 21
+        l = 6
+        s = 4
     elif stockType[0:3] == 'IAU':
-        l = 27
-        s = 20
-    elif stockType[0:3] == 'LQD':
-        l = 13
+        l = 11
         s = 5
-    '''
     # stock-wise param config rnds here
 
     # param config starts here

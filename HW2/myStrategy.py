@@ -12,7 +12,7 @@ def myStrategy(pastData, currPrice, stockType):
         l = 11
         s = 5
     elif stockType[0:3] == 'LQD':
-        l = 6
+        l = 62
         s = 4
     # stock-wise param config rnds here
 
