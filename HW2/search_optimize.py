@@ -31,8 +31,8 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
         alpha = a
         beta = b
     elif stockType[0:3] == 'LQD':
-        w_l = l
-        w_s = s
+        w_l = s
+        w_s = l
         alpha = a
         beta = b
     # stock-wise param config rnds here
@@ -143,13 +143,13 @@ if __name__=='__main__':
     '''
 
     # RSI search algotrithm
-    lmin = 100; lmax = 250;
+    lmin = 4; lmax = 100;
     lbest = 0; sbest = 0;
 
     alist = np.arange(0.0, 1.0, 0.1)
     blist = np.arange(0.0, 1.0, 0.1)
     abest = 0; bbest = 0;
-    bar = Bar('Processing', max = 10 * 10 * 75 * 48)
+    bar = Bar('Processing', max = 10 * 10 * 48 * 48)
 
     for l in range(lmin, lmax + 1, 2):
         for s in range(2, 40):
