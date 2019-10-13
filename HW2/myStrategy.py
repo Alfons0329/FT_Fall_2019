@@ -4,13 +4,13 @@ def myStrategy(pastData, currPrice, stockType):
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
         l = 2
-        s = 112
+        s = 116
         a = 0.5
         b = 0.0
     elif stockType[0:3] == 'DSI':
         l = 6
         s = 4
-        a = 0.90
+        a = 0.50
         b = 0.0
     elif stockType[0:3] == 'IAU':
         l = 11
