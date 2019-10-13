@@ -1,30 +1,23 @@
-def myStrategy(pastData, currPrice, stockType, l, s):
+# def myStrategy(pastData, currPrice, stockType, l, s, a, b):
+def myStrategy(pastData, currPrice, stockType):
 
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
-        l = 13
-        s = 5
-    elif stockType[0:3] == 'DSI':
-        l = 25
-        s = 21
-    elif stockType[0:3] == 'IAU':
-        l = 27
-        s = 20
-    elif stockType[0:3] == 'LQD':
-        l = 13
-        s = 5
-    # stock-wise param config rnds here
+        elif stockType[0:3] == 'DSI':
+            elif stockType[0:3] == 'IAU':
+                elif stockType[0:3] == 'LQD':
+                    # stock-wise param config rnds here
 
     # param config starts here
-    a = 0
-    b = 3
+    alpha = a
+    beta = b
     w_l = l
     w_s = s
     # param config ends here
     action = 0
     data_len = len(pastData)
 
-    if data_len < w_l:
+    if data_len < max(w_l, w_s):
         return 0
 
     # rsi index for estimation
@@ -53,19 +46,11 @@ def myStrategy(pastData, currPrice, stockType, l, s):
 
     rsi_s = float((up + 1) / (up + down + 1))
 
-    if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI':
-        if rsi_s > rsi_l:
-            action = 1
-        elif rsi_s < rsi_l:
-            action = -1
-        else:
-            action = 0
+    if rsi_s > rsi_l or rsi_s > alpha:
+        action = 1
+    elif rsi_s < rsi_l or rsi_s < beta:
+        action = -1
     else:
-        if rsi_s > rsi_l:
-            action = 1
-        elif rsi_s < rsi_l:
-            action = 1
-        else:
-            action = 1
+        action = 0
 
     return action

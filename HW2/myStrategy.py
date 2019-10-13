@@ -3,8 +3,8 @@ def myStrategy(pastData, currPrice, stockType):
 
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
-        l = 2
-        s = 116
+        l = 35
+        s = 42
         a = 0.5
         b = 0.0
     elif stockType[0:3] == 'DSI':
