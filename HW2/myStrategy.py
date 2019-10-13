@@ -62,14 +62,28 @@ def myStrategy(pastData, currPrice, stockType):
 
     rsi_s = float((up + 1) / (up + down + 1))
 
-    if stockType[0:3] == 'IAU' or stockType[0:3] == 'LQD' or stockType[0:3] == 'DSI':
+    if stockType[0:3] == 'SPY':
         if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
         elif rsi_s < rsi_l or rsi_s < beta:
             action = -1
         else:
             action = 0
-    elif stockType[0:3] == 'SPY':
+    elif stockType[0:3] == 'DSI':
+        if rsi_s > rsi_l or rsi_s > alpha:
+            action = 1
+        elif rsi_s < rsi_l or rsi_s < beta:
+            action = -1
+        else:
+            action = 0
+    elif stockType[0:3] == 'IAU':
+        if rsi_s > rsi_l or rsi_s > alpha:
+            action = 1
+        elif rsi_s < rsi_l or rsi_s < beta:
+            action = -1
+        else:
+            action = 0
+    elif stockType[0:3] == 'LQD':
         if rsi_s > rsi_l or rsi_s > alpha:
             action = 1
         elif rsi_s < rsi_l or rsi_s < beta:
