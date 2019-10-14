@@ -1,7 +1,13 @@
+'''
+How my strategy is designed
+Stock-wise tuning with RSI and alpha beta(the tendency, lies in the interval[0, 1])
+And tune each stock with respective best parameter, (greedy search), for each stock we have the
+best param, so overall we have overall best score.
+'''
 def myStrategy(pastData, currPrice, stockType):
     if stockType[0:3] == 'SPY':
         l = 2
-        s = 102
+        s = 101
         a = 0.45
         b = 0.05
     elif stockType[0:3] == 'DSI':
