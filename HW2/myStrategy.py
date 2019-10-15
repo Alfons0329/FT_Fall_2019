@@ -26,7 +26,6 @@ def myStrategy(pastData, currPrice, stockType):
         a = 0.65
         b = 0.05
 
-
     action = 0
     data_len = len(pastData)
 
