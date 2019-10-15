@@ -12,9 +12,9 @@ def myStrategy(pastData, currPrice, stockType):
         b = 0.05
     elif stockType[0:3] == 'DSI':
         l = 15
-        s = 136
-        a = 0.55
-        b = 0.05
+        s = 120
+        a = 0.50
+        b = 0.50
     elif stockType[0:3] == 'IAU':
         l = 28
         s = 29
@@ -25,6 +25,7 @@ def myStrategy(pastData, currPrice, stockType):
         s = 4
         a = 0.65
         b = 0.05
+
 
     action = 0
     data_len = len(pastData)
@@ -46,7 +47,11 @@ def myStrategy(pastData, currPrice, stockType):
         elif w_l[i] > w_l[i + 1]:
             down += (w_l[i] - w_l[i + 1])
 
-    rsi_l = float((up + 1) / (up + down + 1))
+    if stockType[0:3] == 'DSI':
+        rsi_l = float((up) / (up + down))
+    else:
+        rsi_l = float((up + 1) / (up + down + 1))
+
 
     up = down = 0
     for i in range(s - 1):
@@ -55,7 +60,17 @@ def myStrategy(pastData, currPrice, stockType):
         elif w_s[i] > w_s[i + 1]:
             down += (w_s[i] - w_s[i + 1])
 
-    rsi_s = float((up + 1) / (up + down + 1))
+    if stockType[0:3] == 'DSI':
+        rsi_s = float((up) / (up + down))
+
+        if rsi_s < rsi_l or rsi_s > a:
+            action = 1
+        elif rsi_s < rsi_l or rsi_s < b:
+            action = -1
+        else:
+            action = 0
+    else:
+        rsi_s = float((up + 1) / (up + down + 1))
 
     if rsi_s > rsi_l or rsi_s > a:
         action = 1
