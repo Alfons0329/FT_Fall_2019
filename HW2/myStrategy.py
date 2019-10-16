@@ -8,13 +8,13 @@ def myStrategy(pastData, currPrice, stockType):
     if stockType[0:3] == 'SPY':
         l = 2
         s = 101
-        a = 0.45
-        b = 0.05
+        a = 0.447
+        b = 0.04
     elif stockType[0:3] == 'DSI':
         l = 15
         s = 120
-        a = 0.50
-        b = 0.50
+        a = 0.539
+        b = 0.0
     elif stockType[0:3] == 'IAU':
         l = 28
         s = 29
@@ -23,8 +23,8 @@ def myStrategy(pastData, currPrice, stockType):
     elif stockType[0:3] == 'LQD':
         l = 6
         s = 4
-        a = 0.65
-        b = 0.05
+        a = 0.655
+        b = 0.04
 
     action = 0
     data_len = len(pastData)

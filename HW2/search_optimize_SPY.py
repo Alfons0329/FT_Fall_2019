@@ -138,16 +138,15 @@ if __name__=='__main__':
     '''
 
     # RSI search algotrithm
-    lmin = 100; lmax = 250;
+    lmin = 101; lmax = 101;
     lbest = 0; sbest = 0;
 
-    alist = np.arange(0.0, 1.0, 0.1)
-    blist = np.arange(0.0, 1.0, 0.1)
+    alist = np.arange(0.44, 0.47, 0.001)
+    blist = np.arange(0.04, 0.07, 0.001)
     abest = 0; bbest = 0;
-    bar = Bar('Processing', max = 10 * 10 * 75 * 48)
 
     for l in range(lmin, lmax + 1, 2):
-        for s in range(2, 40):
+        for s in range(2, 3):
             for a in alist:
                 for b in blist:
                     rr=np.zeros((fileCount,1))
@@ -168,9 +167,7 @@ if __name__=='__main__':
                         returnRateBest=returnRate
                         # print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))
                         # print("Current best settings: a=%f, b=%f ==> avgReturnRate=%f" %(abest, bbest, returnRateBest))
-                        print(rr)
                         print("Current best settings: l=%d, s=%d, a=%f, b=%f ==> avgReturnRate=%f" %(lbest, sbest, abest, bbest, returnRateBest))
-                    bar.next() # advance progress bar
 
 # print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))
 # print("Overall best settings: a=%f, b=%f ==> bestReturnRate=%f" %(abest, bbest, returnRateBest))

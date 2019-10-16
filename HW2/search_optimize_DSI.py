@@ -18,8 +18,8 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
         alpha = 0.4
         beta = 0.1
     elif stockType[0:3] == 'DSI':
-        w_l = s
-        w_s = l
+        w_l = l
+        w_s = s
         alpha = a
         beta = b
     elif stockType[0:3] == 'IAU':
@@ -54,7 +54,7 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
         elif windowed_data_l[i] > windowed_data_l[i + 1]:
             down += (windowed_data_l[i] - windowed_data_l[i + 1])
 
-    rsi_l = float((up + 1) / (up + down + 1))
+    rsi_l = float((up) / (up + down))
 
     up = down = 0
     for i in range(w_s - 1):
@@ -63,7 +63,7 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
         elif windowed_data_s[i] > windowed_data_s[i + 1]:
             down += (windowed_data_s[i] - windowed_data_s[i + 1])
 
-    rsi_s = float((up + 1) / (up + down + 1))
+    rsi_s = float((up) / (up + down))
 
     if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI' or stockType[0:3] == 'LQD':
         if rsi_s > rsi_l or rsi_s > alpha:
@@ -140,16 +140,15 @@ if __name__=='__main__':
     '''
 
     # RSI search algotrithm
-    lmin = 100; lmax = 250;
+    lmin = 15; lmax = 15;
     lbest = 0; sbest = 0;
 
-    alist = np.arange(0.0, 1.0, 0.1)
-    blist = np.arange(0.0, 1.0, 0.1)
+    alist = np.arange(0.53, 0.55, 0.001)
+    blist = np.arange(0.0, 0.01, 0.001)
     abest = 0; bbest = 0;
-    bar = Bar('Processing', max = 10 * 10 * 75 * 48)
 
     for l in range(lmin, lmax + 1, 2):
-        for s in range(2, 40):
+        for s in range(120, 121):
             for a in alist:
                 for b in blist:
                     rr=np.zeros((fileCount,1))
@@ -170,9 +169,7 @@ if __name__=='__main__':
                         returnRateBest=returnRate
                         # print("Current best settings: l=%d, s=%d ==> avgReturnRate=%f" %(lbest, sbest, returnRateBest))
                         # print("Current best settings: a=%f, b=%f ==> avgReturnRate=%f" %(abest, bbest, returnRateBest))
-                        print(rr)
                         print("Current best settings: l=%d, s=%d, a=%f, b=%f ==> avgReturnRate=%f" %(lbest, sbest, abest, bbest, returnRateBest))
-                    bar.next() # advance progress bar
 
 # print("Overall best settings: l=%d, s=%d ==> bestAvgReturnRate=%f" %(lbest, sbest, returnRateBest))
 # print("Overall best settings: a=%f, b=%f ==> bestReturnRate=%f" %(abest, bbest, returnRateBest))
