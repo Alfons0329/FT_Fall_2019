@@ -77,7 +77,7 @@ def myStrategy(pastData, currPrice, stockType, l, s, au, bl):
         elif rsi_s < rsi_l or (rsi_s < beta and rsi_s > bl):
             action = -1
         else:
-            action = 1
+            action = 0
 
     return action
 
@@ -141,8 +141,8 @@ if __name__=='__main__':
     lmin = 101; lmax = 101;
     lbest = 0; sbest = 0;
 
-    alist = np.arange(0.45, 1.0, 0.01)
-    blist = np.arange(0.04, 1.0, 0.01)
+    alist = np.arange(0.447, 1.0, 0.001)
+    blist = np.arange(0.04, 1.0, 0.001)
     abest = 0; bbest = 0;
 
     for l in range(lmin, lmax + 1, 2):
