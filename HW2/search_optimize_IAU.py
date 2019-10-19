@@ -144,8 +144,8 @@ if __name__=='__main__':
     lmin = 28; lmax = 28;
     lbest = 0; sbest = 0;
 
-    alist = np.arange(0.67, 1.0, 0.001)
-    blist = np.arange(0.67, 1.0, 0.001)
+    alist = np.arange(0.671, 1.0, 0.001)
+    blist = np.arange(0.671, 1.0, 0.001)
     abest = 0; bbest = 0;
 
     for l in range(lmin, lmax + 1, 2):
