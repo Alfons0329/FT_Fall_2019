@@ -9,7 +9,7 @@ import os, sys, csv
 from progress.bar import Bar
 
 # Implementation part of HW2
-def myStrategy(pastData, currPrice, stockType, l, s, a, b):
+def myStrategy(pastData, currPrice, stockType, l, s, au, bl):
 
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
@@ -18,10 +18,10 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
         alpha = 0.4
         beta = 0.1
     elif stockType[0:3] == 'DSI':
-        w_l = l
-        w_s = s
-        alpha = a
-        beta = b
+        w_l = 15
+        w_s = 120
+        alpha = 0.539
+        beta = 0.0
     elif stockType[0:3] == 'IAU':
         w_l = 11
         w_s = 5
@@ -66,16 +66,16 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
     rsi_s = float((up) / (up + down))
 
     if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI' or stockType[0:3] == 'LQD':
-        if rsi_s > rsi_l or rsi_s > alpha:
+        if rsi_s > rsi_l or (rsi_s > alpha and rsi_s < au):
             action = 1
-        elif rsi_s < rsi_l or rsi_s < beta:
+        elif rsi_s < rsi_l or (rsi_s < beta and rsi_s > bl):
             action = -1
         else:
             action = 0
     elif stockType[0:3] == 'SPY':
-        if rsi_s > rsi_l or rsi_s > alpha:
+        if rsi_s > rsi_l or (rsi_s > alpha and rsi_s < au):
             action = 1
-        elif rsi_s < rsi_l or rsi_s < beta:
+        elif rsi_s < rsi_l or (rsi_s < beta and rsi_s > bl):
             action = -1
         else:
             action = 1
@@ -143,8 +143,8 @@ if __name__=='__main__':
     lmin = 15; lmax = 15;
     lbest = 0; sbest = 0;
 
-    alist = np.arange(0.53, 0.55, 0.001)
-    blist = np.arange(0.0, 0.01, 0.001)
+    alist = np.arange(0.539, 1.0, 0.001)
+    blist = np.arange(0.0, 1.0, 0.001)
     abest = 0; bbest = 0;
 
     for l in range(lmin, lmax + 1, 2):

@@ -8,14 +8,14 @@ import os, sys, csv
 from progress.bar import Bar
 
 # Implementation part of HW2
-def myStrategy(pastData, currPrice, stockType, l, s, a, b):
+def myStrategy(pastData, currPrice, stockType, l, s, au, bl):
 
     # stock-wise param config starts here
     if stockType[0:3] == 'SPY':
-        w_l = s
-        w_s = l
-        alpha = a
-        beta = b
+        w_l = 2
+        w_s = 101
+        alpha = 0.447
+        beta = 0.04
     elif stockType[0:3] == 'DSI':
         w_l = 6
         w_s = 4
@@ -65,16 +65,16 @@ def myStrategy(pastData, currPrice, stockType, l, s, a, b):
     rsi_s = float((up + 1) / (up + down + 1))
 
     if stockType[0:3] == 'IAU' or stockType[0:3] == 'DSI' or stockType[0:3] == 'LQD':
-        if rsi_s > rsi_l or rsi_s > alpha:
+        if rsi_s > rsi_l or (rsi_s > alpha and rsi_s < au):
             action = 1
-        elif rsi_s < rsi_l or rsi_s < beta:
+        elif rsi_s < rsi_l or (rsi_s < beta and rsi_s > bl):
             action = -1
         else:
             action = 0
     elif stockType[0:3] == 'SPY':
-        if rsi_s > rsi_l or rsi_s > alpha:
+        if rsi_s > rsi_l or (rsi_s > alpha and rsi_s < au):
             action = 1
-        elif rsi_s < rsi_l or rsi_s < beta:
+        elif rsi_s < rsi_l or (rsi_s < beta and rsi_s > bl):
             action = -1
         else:
             action = 1
@@ -141,8 +141,8 @@ if __name__=='__main__':
     lmin = 101; lmax = 101;
     lbest = 0; sbest = 0;
 
-    alist = np.arange(0.44, 0.47, 0.001)
-    blist = np.arange(0.04, 0.07, 0.001)
+    alist = np.arange(0.45, 1.0, 0.01)
+    blist = np.arange(0.04, 1.0, 0.01)
     abest = 0; bbest = 0;
 
     for l in range(lmin, lmax + 1, 2):
