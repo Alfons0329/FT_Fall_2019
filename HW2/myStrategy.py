@@ -10,14 +10,14 @@ def myStrategy(pastData, currPrice, stockType):
         s = 101
         a = 0.447
         b = 0.04
-        au = 0.579
+        au = 0.594
         bl = 0.05
     elif stockType[0:3] == 'DSI':
         l = 15
         s = 120
         a = 0.539
         b = 0.0
-        au = 0.61
+        au = 0.667
         bl = 0.0
     elif stockType[0:3] == 'IAU':
         l = 28
