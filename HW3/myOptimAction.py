@@ -9,7 +9,7 @@ def myOptimAction(priceMat, transFeeRate):
     # stock_have = (amount, type)
     stock_have = (0, -1)
 
-    action_matrix = np.zeros((days, 4), dtype=object)
+    action_matrix = np.zeros((days, 4), dtype=int)
 
     # Use DP to find best possibilities
     for i in range(days):
@@ -42,7 +42,7 @@ def myOptimAction(priceMat, transFeeRate):
                     idx_buy = cnt
                 cnt += 1
 
-            # buy only if situation results in a better cash
+            # buy only if situation results in the more amount of stock 
             if stock_today > stock_have[0]:
                 stock_have = (stock_today, idx_buy)
 
@@ -51,9 +51,9 @@ def myOptimAction(priceMat, transFeeRate):
         print('buy stock %d to have stock %f' % (idx_buy, stock_have[0]))
 
         action_matrix[i][0] = i
-        action_matrix[i][1] = idx_sell
-        action_matrix[i][2] = idx_buy
-        action_matrix[i][3] = cash_max
+        action_matrix[i][1] = int(idx_sell)
+        action_matrix[i][2] = int(idx_buy)
+        action_matrix[i][3] = int(cash_max)
 
         # input()
 
