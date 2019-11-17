@@ -17,6 +17,7 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 	
 	# Run through each action, should order by day
 	for i in range(actionCount):
+		print('action ', i)
 		actionVec = actionMat[ i ]
 		day = actionVec[0] # The index of day
 		a = actionVec[1] # The index of "from" stock
