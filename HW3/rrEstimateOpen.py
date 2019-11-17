@@ -27,6 +27,7 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 		# check action day
 		if day >= preDay and day >= 0 and z > 0 :
 			# get real action by suggested action
+			print('day %d capital %f ' % (actionMat[i][0], capital))
 			if i > 0:
 				stockHolding[i] = stockHolding[i-1]	 # The stock holding from the previous action day
 				preDay = day  # previous action day
@@ -58,8 +59,10 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 				stockHolding[i][b] += getCash*(1-transFeeRate) / currentPriceBuy # Buy stock using cash
 				realAction[i] = 2
 			else:
+				print('day ', actionMat[i][0], 'inner err')
 				assert False
 		else:
+			print('day ', i, ' outer error')
 			assert False
 			
 	# calculate total cash you get at last day
