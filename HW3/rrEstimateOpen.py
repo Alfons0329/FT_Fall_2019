@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 import pandas as pd
-from myOptimAction import myOptimAction
+from myOptimAction_simple import myOptimAction
 
 # Compute return rate over a given price Matrix & action Matrix
 def computeReturnRate(priceMat, transFeeRate, actionMat):
