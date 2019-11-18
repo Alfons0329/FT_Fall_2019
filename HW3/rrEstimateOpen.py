@@ -10,11 +10,11 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 	stockCount = len(priceMat[0])	# stack size
 	suggestedAction = actionMat	   # Mat of suggested actions
 	actionCount = len(suggestedAction)
-	
+
 	stockHolding = np.zeros((actionCount,stockCount))	# Mat of stock holdings
-	realAction = np.zeros((actionCount,1))	  # Real action, which might be different from suggested action. For instance, when the suggested action is 1 (buy) but you don't have any capital, then the real action is 0 (hold, or do nothing). 
+	realAction = np.zeros((actionCount,1))	  # Real action, which might be different from suggested action. For instance, when the suggested action is 1 (buy) but you don't have any capital, then the real action is 0 (hold, or do nothing).
 	preDay = 0	# previous action day
-	
+
 	# Run through each action, should order by day
 	for i in range(actionCount):
 		actionVec = actionMat[ i ]
@@ -23,14 +23,14 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 		b = actionVec[2] # The index of "to" stock
 		z = actionVec[3] # The equivalent cash for such transaction.
 		currentPriceVec = priceMat[day]	 # current priceVec
-		
+
 		# check action day
 		if day >= preDay and day >= 0 and z > 0 :
 			# get real action by suggested action
 			if i > 0:
 				stockHolding[i] = stockHolding[i-1]	 # The stock holding from the previous action day
 				preDay = day  # previous action day
-			
+
 			if a == -1 and b >= 0 and capital > 0 :	 # Suggested action is "buy"
 				currentPrice = currentPriceVec[b]  # The current price of stock
 				if capital < z :  # "buy" allonly if you don't have enough capital
@@ -65,16 +65,16 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 		else:
 			print('day ', i, ' outer error')
 			assert False
-			
+
 	# calculate total cash you get at last day
 	total = capital
 	for stock in range(stockCount) :
 		currentPriceVec = priceMat[ actionMat[-1][0] ]
-		total += stockHolding[-1][stock] * currentPriceVec[stock]*(1-transFeeRate)	# Total asset, including stock holding and cash 
-		
+		total += stockHolding[-1][stock] * currentPriceVec[stock]*(1-transFeeRate)	# Total asset, including stock holding and cash
+
 	returnRate=(total-capitalOrig)/capitalOrig	# Return rate of this run
 	return returnRate
-	
+
 if __name__ == "__main__":
 	print("Reading %s..." %(sys.argv[1]))
 	file = sys.argv[1]	  # input file

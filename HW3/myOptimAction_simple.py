@@ -15,8 +15,9 @@ def myOptimAction(priceMat, transFeeRate):
     for i in range(1, days):
         sell_idx = -1
         for j in range(4):
-            if dp_record[i - 1][j] * priceMat[i][j] * adjust1 > cash_have:
-                cash_have = dp_record[i - 1][j] * priceMat[i][j] * adjust1
+            cash_new = dp_record[i - 1][j] * priceMat[i][j] * adjust1
+            if cash_new > cash_have:
+                cash_have = cash_new
                 sell_idx = j
 
         if cash_have > dp_record[i - 1][-1]:
@@ -28,8 +29,9 @@ def myOptimAction(priceMat, transFeeRate):
             trans_record[i][-1] = use_cash
             trans_record[i][-2] = trans_record[i - 1][-2]
 
+        cash_cache = cash_have * adjust1
         for j in range(4):
-            stock_have = cash_have / priceMat[i][j] * adjust1
+            stock_have = cash_cache / priceMat[i][j]
             if stock_have > dp_record[i - 1][j]:
                 dp_record[i][j] = stock_have
                 trans_record[i][j] = sell_idx
@@ -40,9 +42,9 @@ def myOptimAction(priceMat, transFeeRate):
     sell_from = trans_record[-1][-1]
     buy_to = -1
     for i in range(days - 1, -1, -1):
-        if sell_from == use_cash:
+        if not (sell_from ^ use_cash):
             sell_from = -1
-        if buy_to == use_cash:
+        if not (buy_to ^ use_cash):
             buy_to = -1
 
         if (sell_from ^ buy_to):

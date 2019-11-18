@@ -45,7 +45,6 @@ def myOptimAction(priceMat, transFeeRate):
                     trans_record[i][j] = j
 
     maxx = 2 << 20 -1
-    print(trans_record[0:20])
     # backtrace from the last round, check what has been sold (cash from sell stock, which stock has been sold for such amount of money)
     sell_from = trans_record[-1][-1]
     # from the last round, we will not perform buy
