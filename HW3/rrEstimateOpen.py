@@ -58,9 +58,9 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 				stockHolding[i][b] += getCash*(1-transFeeRate) / currentPriceBuy # Buy stock using cash
 				realAction[i] = 2
 			else:
-				print('day ', actionMat[i][0], 'inner err')
+				#print('day ', actionMat[i][0], 'inner err')
 				assert False
-			print('Day %d capital %f ' % (actionMat[i][0], capital))
+			#print('Day %d capital %f ' % (actionMat[i][0], capital))
 			# input()
 		else:
 			print('day ', i, ' outer error')

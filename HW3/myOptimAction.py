@@ -53,10 +53,10 @@ def myOptimAction(priceMat, transFeeRate):
                     # the stock remains the same
                     trans_record[i][j] = j
 
-    maxx = 2 << 64 - 1
+    maxx = 2 << 100 -1
     print(dp_record)
-    input()
     print(trans_record)
+    input()
     # from the last round, check what has been sold (cash from sell stock, which stock has been sold for such amount of money)
     sell_from = trans_record[-1][-1] 
     # from the last round, we will not perform buy
@@ -69,15 +69,17 @@ def myOptimAction(priceMat, transFeeRate):
         if buy_to == use_cash:
             buy_to = -1
         
-        if sell_from != -1 and buy_to != -1 and sell_from != buy_to:
+        if sell_from != buy_to:
             action_matrix.append([i, sell_from, buy_to, maxx])
         
         # we should buy stock we sell tomorrow from today for optimal solution
+        # print('i ', i,' buy_to ', buy_to, ' sell_from ', sell_from)
         buy_to = sell_from 
         # search how the stock is made of, hold or buy
-        print('i ', i, ' buy_to ', buy_to)
-        sell_from = [i - 1][buy_to]
+        sell_from = trans_record[i - 1][buy_to]
     
+    for i in action_matrix:
+        print(i)
     return action_matrix[::-1]
 
 # WRONG: dp_record[i][j] = max(dp_record[i - 1][j], dp_record[i - 1][-1] / priceMat[i][j] * (1 - transFeeRate))
