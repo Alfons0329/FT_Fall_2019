@@ -61,7 +61,7 @@ def computeReturnRate(priceMat, transFeeRate, actionMat):
 				print('day ', actionMat[i][0], 'inner err')
 				assert False
 			print('Day %d capital %f ' % (actionMat[i][0], capital))
-			input()
+			# input()
 		else:
 			print('day ', i, ' outer error')
 			assert False
