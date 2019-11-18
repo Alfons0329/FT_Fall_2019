@@ -9,7 +9,7 @@ def myOptimAction(priceMat, transFeeRate):
 
     dp_record = np.zeros((days, 5), dtype=float)
     # trans_record = np.zeros((days, 2), dtype=int)
-    trans_record = np.zeros((days, types + 1), dtype=int)
+    trans_record = np.zeros((days * 2 + 1, types + 1), dtype=int)
     # trans_record means [(use_cash or same), (use_cash or same), (use_cash or same), (use_cash or same), (sell_stock or same)]
     # where same means no operation, for -1 in cash operation and same in stock operation
     action_matrix = []
@@ -54,9 +54,9 @@ def myOptimAction(priceMat, transFeeRate):
                     trans_record[i][j] = j
 
     maxx = 2 << 100 -1
-    print(dp_record)
-    print(trans_record)
-    input()
+    # print(dp_record)
+    # print(trans_record)
+    # input()
     # from the last round, check what has been sold (cash from sell stock, which stock has been sold for such amount of money)
     sell_from = trans_record[-1][-1] 
     # from the last round, we will not perform buy
@@ -69,17 +69,19 @@ def myOptimAction(priceMat, transFeeRate):
         if buy_to == use_cash:
             buy_to = -1
         
+        # valid transaction
         if sell_from != buy_to:
+            # print('i ', i,' buy_to ', buy_to, ' sell_from ', sell_from)
             action_matrix.append([i, sell_from, buy_to, maxx])
         
         # we should buy stock we sell tomorrow from today for optimal solution
-        # print('i ', i,' buy_to ', buy_to, ' sell_from ', sell_from)
+        # input()
         buy_to = sell_from 
         # search how the stock is made of, hold or buy
         sell_from = trans_record[i - 1][buy_to]
     
-    for i in action_matrix:
-        print(i)
+    # for i in action_matrix:
+    #     print(i)
     return action_matrix[::-1]
 
 # WRONG: dp_record[i][j] = max(dp_record[i - 1][j], dp_record[i - 1][-1] / priceMat[i][j] * (1 - transFeeRate))

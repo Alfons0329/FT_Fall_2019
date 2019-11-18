@@ -83,4 +83,4 @@ if __name__ == "__main__":
 	priceMat = df.values	# Get price as the m×n matrix which holds n stocks' price over m days
 	actionMat = myOptimAction(priceMat, transFeeRate)	# Obtain the suggested action
 	rr = computeReturnRate(priceMat, transFeeRate, actionMat)  # Compute return rate
-	print("rr=%f%%" %(rr*100))
+	print("rr=%f%%" %(rr*100/1000000))
