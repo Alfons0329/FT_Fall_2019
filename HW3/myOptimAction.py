@@ -4,7 +4,7 @@ def myOptimAction(priceMat, transFeeRate):
     days, types = priceMat.shape
     cash_have= 1000
     dp_record = np.zeros((days, 5), dtype=float)
-    trans_record = np.zeros((days), dtype=int)
+    trans_record = np.zeros((days, 2), dtype=int)
     action_matrix = []
 
     # Use DP to find best possibilities
@@ -16,7 +16,7 @@ def myOptimAction(priceMat, transFeeRate):
         pa, pb, pc, pd = priceMat[i]
         if i == 0:
             dp_record[0] = [cash_have / pa * (1 - transFeeRate), cash_have / pb * (1 - transFeeRate), cash_have / pc * (1 - transFeeRate), cash_have / pd * (1 - transFeeRate), cash_have]
-            trans_record[0] = -1 
+            trans_record[i] = [-1, 1000]
         else:
             # sell stock, update cash
             sell_idx = -1
@@ -35,15 +35,21 @@ def myOptimAction(priceMat, transFeeRate):
                 else:
                     dp_record[i][j] = dp_record[i - 1][j]
 
-        trans_record[i] = sell_idx
-        # print(i, priceMat[i], dp_record[i])
-        # print(trans_record[i])
+            trans_record[i] = [sell_idx, cash_have]
 
-    int_max = 2 << 32 - 1
+    '''
+    for i in trans_record:
+        print(i)
+        input()
+    '''
+    maxx = 2 << 32 - 1
+    input()
     for i in range(days - 2, -1, -1):
-        a = trans_record[i]
-        b = trans_record[i + 1]
-        if a != b: 
-            action_matrix.append([i, a, b, int_max])
+        a = trans_record[i][0]
+        b = trans_record[i + 1][0]
+        if a != b:
+            action_matrix.append([i, a, b, trans_record[i][1]]) 
 
+    for i in action_matrix:
+        print(i)
     return action_matrix[::-1]
