@@ -65,9 +65,9 @@ def myStrategy(daily, minutely, openpricev, l, s, a, b):
         up += 1
     rsi_s = float((up) / (up + down))
 
-    if rsi_s > rsi_l:
+    if rsi_s > rsi_l or rsi_s > a:
         act = 1
-    elif rsi_s < rsi_l:
+    elif rsi_s < rsi_l or rsi_s < b:
         act = -1
     else:
         act = 0
@@ -139,36 +139,37 @@ import time
 THREAD_CNT = 25
 thread_result = [i for i in range(THREAD_CNT)]
 
+min_l = 0
+max_l = 25
+scale_day = max_l // THREAD_CNT
+
 def search_optimize(thread_id):
     print('optimize thread id ', thread_id)
     best_rr = -1000
 
-    min_l = 0
-    max_l = 200
     best_l = 0
     best_s = 0
-    list_a = np.arange(0.0, 1.0, 0.1)
-    list_b = np.arange(0.0, 1.0, 0.1)
+    list_a = np.arange(0.0, 1.0, 1.0)
+    list_b = np.arange(0.0, 1.0, 1.0)
     best_a = 0
     best_b = 0
 
-    for l in range(thread_id * 8, (thread_id + 1) * 8, 1):
+    for l in range(thread_id * scale_day, (thread_id + 1) * scale_day, 1):
         for s in range(0, l):
-                a = 0.0
-                b = 1.0
+            for a in list_a:
+                for b in list_b:
 
-                rr = evaluate(l, s, a, b)
-                if rr > best_rr:
-                    best_l = l
-                    best_s = s
-                    best_a = a
-                    best_b = b
-                    best_rr = rr
-                    print("Thread %d best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_b, best_rr))
-                print("Thread %d best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_b, best_rr))
+                    rr = evaluate(l, s, a, b)
+                    if rr > best_rr:
+                        best_l = l
+                        best_s = s
+                        best_a = a
+                        best_b = b
+                        best_rr = rr
+                        print("Thread %d current best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(thread_id, best_l, best_s, best_a, best_b, best_rr))
 
-    print("Thread %d overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
-    thread_result.append((thread_id, l, s, a, b, rr))
+    print("Thread %d overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(thread_id, best_l, best_s, best_a, best_a, best_rr))
+    thread_result.append((thread_id, best_l, best_s, best_a, best_b, best_rr))
 
 class mythread(threading.Thread):
     def __init__(self, num):
@@ -177,7 +178,7 @@ class mythread(threading.Thread):
 
     def run(self):
         print('Thread %d start optimizing--------------'%(self.num))
-        search_optimize(i)
+        search_optimize(self.num)
         print('Thread %d finished optimizing--------------'%(self.num))
         time.sleep(1)
 
