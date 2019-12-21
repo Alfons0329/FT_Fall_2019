@@ -132,15 +132,19 @@ def evaluate(l, s, a, b):
 
     return returnRate
 
+# Do multithread searching for optimize
+import threading
+import time
 
-# In[21]:
+THREAD_CNT = 25
+thread_result = [i for i in range(THREAD_CNT)]
 
-
-def search_optimize():
+def search_optimize(thread_id):
+    print('optimize thread id ', thread_id)
     best_rr = -1000
 
     min_l = 0
-    max_l = 100
+    max_l = 200
     best_l = 0
     best_s = 0
     list_a = np.arange(0.0, 1.0, 0.1)
@@ -148,21 +152,41 @@ def search_optimize():
     best_a = 0
     best_b = 0
 
-    for l in range(min_l, max_l, 1):
+    for l in range(thread_id * 8, (thread_id + 1) * 8, 1):
         for s in range(0, l):
+                a = 0.0
+                b = 1.0
 
-            a = 0
-            b = 0
-            rr = evaluate(l, s, a, b)
-            if rr > best_rr:
-                best_l = l
-                best_s = s
-                best_a = a
-                best_b = b
-                best_rr = rr
-                print("Current settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(l, s, a, b, rr))
+                rr = evaluate(l, s, a, b)
+                if rr > best_rr:
+                    best_l = l
+                    best_s = s
+                    best_a = a
+                    best_b = b
+                    best_rr = rr
+                    print("Thread %d best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_b, best_rr))
+                print("Thread %d best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_b, best_rr))
 
-    print("Overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
+    print("Thread %d overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
+    thread_result.append((thread_id, l, s, a, b, rr))
 
-search_optimize()
+class mythread(threading.Thread):
+    def __init__(self, num):
+        threading.Thread.__init__(self)
+        self.num = num
 
+    def run(self):
+        print('Thread %d start optimizing--------------'%(self.num))
+        search_optimize(i)
+        print('Thread %d finished optimizing--------------'%(self.num))
+        time.sleep(1)
+
+threads = []
+for i in range(THREAD_CNT):
+    threads.append(mythread(i))
+    threads[i].start()
+
+for i in range(THREAD_CNT):
+    threads[i].join()
+
+print(thread_result)
