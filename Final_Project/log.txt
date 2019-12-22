@@ -1,0 +1,1 @@
+search_124_128.txtOverall best settings: l = 126, s = 124, a = 0.000000, b = 0.000000 rr = 0.042553
