@@ -118,6 +118,13 @@ def evaluate(l, s, a, b):
 min_l = int(sys.argv[1])
 max_l = int(sys.argv[2])
 print('search between [%d, %d)'%(min_l, max_l))
+f_name = 'search_' + str(min_l) + '_' + str(max_l) + '.txt'
+
+with open(f_name, 'w') as myfile:
+    myfile.write(f_name)
+
+myfile.close()
+
 def search_optimize():
     best_rr = -1000.00
 
@@ -129,7 +136,8 @@ def search_optimize():
     best_b = 0
 
     for l in range(min_l, max_l, 1):
-        for s in range(l // 2, l):
+        min_s = l * 9 // 10
+        for s in range(min_s, l):
             a = 0
             b = 1
             rr = evaluate(l, s, a, b)
@@ -139,8 +147,14 @@ def search_optimize():
                 best_a = a
                 best_b = b
                 best_rr = rr
-                print("Current best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
+                current_best = 'Current best settings: l = %d, s = %d, a = %f, b = %f rr = %f'%(best_l, best_s, best_a, best_a, best_rr)
 
-    print("Overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
+    overall_best = 'Overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f'%(best_l, best_s, best_a, best_a, best_rr)
+    print(overall_best)
+
+    with open(f_name, 'a') as myfile:
+        myfile.write(overall_best)
+
+    myfile.close()
 
 search_optimize()
