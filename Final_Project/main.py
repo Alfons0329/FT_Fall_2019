@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[14]:
-
-
 '''
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
@@ -74,33 +70,21 @@ def myStrategy(daily, minutely, openpricev, l, s, a, b):
 
     return act
 
-
-# In[15]:
-
-
-# from myStrategy import myStrategy
-
-# dailyOhlcv = pd.read_csv(sys.argv[1])
-# minutelyOhlcv = pd.read_csv(sys.argv[2])
-
 dailyOhlcv = pd.read_csv('daily.csv')
 minutelyOhlcv = pd.read_csv('minute.csv')
 
-
-capital = 500000.0
-capitalOrig=capital
-transFee = 100
-evalDays = 14
-action = np.zeros((evalDays,1))
-realAction = np.zeros((evalDays,1))
-total = np.zeros((evalDays,1))
-total[0] = capital
-Holding = 0.0
-openPricev = dailyOhlcv["open"].tail(evalDays).values
-clearPrice = dailyOhlcv.iloc[-3]["close"]
-
 def evaluate(l, s, a, b):
-    global dailyOhlcv, minutelyOhlcv, capital, capitalOrig, transFee, evalDays, action, realAction, total, Holding, openPricev, clearPrice
+    capital = 500000.0
+    capitalOrig=capital
+    transFee = 100
+    evalDays = 14
+    action = np.zeros((evalDays,1))
+    realAction = np.zeros((evalDays,1))
+    total = np.zeros((evalDays,1))
+    total[0] = capital
+    Holding = 0.0
+    openPricev = dailyOhlcv["open"].tail(evalDays).values
+    clearPrice = dailyOhlcv.iloc[-3]["close"]
 
     for ic in range(evalDays,0,-1):
         dailyOhlcvFile = dailyOhlcv.head(len(dailyOhlcv)-ic)
@@ -126,31 +110,24 @@ def evaluate(l, s, a, b):
             capital = Holding*clearPrice - transFee
             Holding = 0
 
-        total[evalDays-ic] = capital + float(Holding>0) * (Holding*currPrice-transFee)
-
     returnRate = (total[-1] - capitalOrig)/capitalOrig
-
     return returnRate
 
-
-# In[21]:
-
-
+min_l = int(sys.argv[1])
+max_l = int(sys.argv[2])
+print('search between [%d, %d)'%(min_l, max_l))
 def search_optimize():
-    best_rr = -1000
+    best_rr = -1000.00
 
-    min_l = 0
-    max_l = 100
     best_l = 0
     best_s = 0
-    list_a = np.arange(0.0, 1.0, 0.1)
-    list_b = np.arange(0.0, 1.0, 0.1)
+    list_a = np.arange(0.5, 1.0, 0.05)
+    list_b = np.arange(0.0, 0.5, 0.05)
     best_a = 0
     best_b = 0
 
     for l in range(min_l, max_l, 1):
         for s in range(0, l):
-
             a = 0
             b = 0
             rr = evaluate(l, s, a, b)
@@ -160,9 +137,7 @@ def search_optimize():
                 best_a = a
                 best_b = b
                 best_rr = rr
-                print("Current settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(l, s, a, b, rr))
 
     print("Overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
 
 search_optimize()
-
