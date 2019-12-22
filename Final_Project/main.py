@@ -110,6 +110,8 @@ def evaluate(l, s, a, b):
             capital = Holding*clearPrice - transFee
             Holding = 0
 
+        total[evalDays - ic] = capital + float(Holding > 0) * (Holding * currPrice - transFee)
+
     returnRate = (total[-1] - capitalOrig)/capitalOrig
     return returnRate
 
@@ -127,9 +129,9 @@ def search_optimize():
     best_b = 0
 
     for l in range(min_l, max_l, 1):
-        for s in range(0, l):
+        for s in range(l // 2, l):
             a = 0
-            b = 0
+            b = 1
             rr = evaluate(l, s, a, b)
             if rr > best_rr:
                 best_l = l
@@ -137,6 +139,7 @@ def search_optimize():
                 best_a = a
                 best_b = b
                 best_rr = rr
+                print("Current best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
 
     print("Overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f"%(best_l, best_s, best_a, best_a, best_rr))
 

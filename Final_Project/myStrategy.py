@@ -34,9 +34,9 @@ def myStrategy(daily, minutely, opv):
         up += 1
     rsi_s = float((up) / (up + down))
 
-    if rsi_s > rsi_l or rsi_s > 0.5 :
+    if rsi_s > rsi_l:
         act = 1
-    elif rsi_s < rsi_l or rsi_s < 0.5:
+    elif rsi_s < rsi_l:
         act = -1
     else:
         act = 0

@@ -43,5 +43,6 @@ for ic in range(evalDays,0,-1):
     total[evalDays-ic] = capital + float(Holding>0) * (Holding*currPrice-transFee)
 
 returnRate = (total[-1] - capitalOrig)/capitalOrig
+print('total ', total)
 print('rr: ', returnRate)
 
