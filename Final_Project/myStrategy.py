@@ -1,6 +1,6 @@
 def myStrategy(daily, minutely, opv):
-    l = 121
-    s = 113
+    l = 49
+    s = 47
 
     act = 0
 

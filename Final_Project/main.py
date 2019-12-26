@@ -28,11 +28,16 @@ Progress log note;
 12/20: Try using the brute force search like HW2, but trying with daily scale approach
 '''
 
+type_eval = sys.argv[3]
+
 def myStrategy(daily, minutely, openpricev, l, s, a, b):
     act = 0
 
-    daily = daily['close'].values
-    data_len = len(daily)
+    if type_eval == 0:
+        daily = daily['close'].values
+    else:
+        daily = minutely['close'].values
+
 
     w_l = daily[-l:]
     w_s = daily[-s:]
@@ -117,7 +122,7 @@ def evaluate(l, s, a, b):
 
 min_l = int(sys.argv[1])
 max_l = int(sys.argv[2])
-print('search between [%d, %d)'%(min_l, max_l))
+print('search between [%d, %d) type_eval %s'%(min_l, max_l, type_eval))
 f_name = 'search_' + str(min_l) + '_' + str(max_l) + '.txt'
 
 with open(f_name, 'w') as myfile:
