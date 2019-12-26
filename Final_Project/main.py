@@ -28,7 +28,7 @@ Progress log note;
 12/20: Try using the brute force search like HW2, but trying with daily scale approach
 '''
 
-type_eval = sys.argv[3]
+type_eval = int(sys.argv[3])
 
 def myStrategy(daily, minutely, openpricev, l, s, a, b):
     act = 0
@@ -122,7 +122,7 @@ def evaluate(l, s, a, b):
 
 min_l = int(sys.argv[1])
 max_l = int(sys.argv[2])
-print('search between [%d, %d) type_eval %s'%(min_l, max_l, type_eval))
+print('search between [%d, %d) type_eval %d'%(min_l, max_l, type_eval))
 f_name = 'search_' + str(min_l) + '_' + str(max_l) + '.txt'
 
 with open(f_name, 'w') as myfile:
@@ -154,7 +154,7 @@ def search_optimize():
                 best_rr = rr
                 current_best = 'Current best settings: l = %d, s = %d, a = %f, b = %f rr = %f'%(best_l, best_s, best_a, best_a, best_rr)
 
-    overall_best = 'Overall best settings: l = %d, s = %d, a = %f, b = %f rr = %f'%(best_l, best_s, best_a, best_a, best_rr)
+    overall_best = '\nOverall best settings: l = %d, s = %d, a = %f, b = %f rr = %f, '%(best_l, best_s, best_a, best_a, best_rr)
     print(overall_best)
 
     with open(f_name, 'a') as myfile:
