@@ -15,7 +15,7 @@ class mythread(threading.Thread):
 
     def run(self):
         cnt = self.num
-        exe = 'python3 main.py ' + str(min_search + cnt * scale) + ' ' + str(min_search + (cnt + 1) * scale) + ' ' + str(type_eval)
+        exe = 'python3 main_finetune_ls.py ' + str(min_search + cnt * scale) + ' ' + str(min_search + (cnt + 1) * scale) + ' ' + str(type_eval)
         os.system(exe)
 
 threads = []

@@ -9,11 +9,10 @@ import pandas as pd
 This code is used for fine tune the s parameter where the best_l has been determined.
 '''
 
-min_l = int(sys.argv[1])
-max_l = int(sys.argv[2])
+min_search = int(sys.argv[1])
+max_search = int(sys.argv[2])
 type_eval = int(sys.argv[3])
-print('Search rsi small between [%d, %d) type_eval %d'%(min_l, max_l, type_eval))
-f_name = 'search_' + str(min_l) + '_' + str(max_l) + '.txt'
+print('Search rsi small between [%d, %d) type_eval %d'%(min_search, max_search, type_eval))
 
 def myStrategy(daily, minutely, openpricev, l, s, a, b):
     act = 0
@@ -117,7 +116,7 @@ def search_optimize():
             best_s = s
             best_rr = rr
 
-    overall_best = '\nOverall best settings: l = %d, s = %d, a = %f, b = %f rr = %f, '%(best_l, best_s, best_a, best_a, best_rr)
+    overall_best = '\nOverall best settings: l = %d, s = %d rr = %f, '%(best_l, best_s, best_rr)
     print(overall_best)
 
 search_optimize()
