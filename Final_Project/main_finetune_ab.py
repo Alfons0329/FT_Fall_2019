@@ -69,9 +69,9 @@ def myStrategy(daily, minutely, openpricev, l, s, a, b):
         up += 1
     rsi_s = float((up) / (up + down))
 
-    if rsi_s > rsi_l and rsi_s > a:
+    if rsi_s > rsi_l:
         act = 1
-    elif rsi_s < rsi_l and rsi_s < b:
+    elif rsi_s < rsi_l:
         act = -1
     else:
         act = 0
