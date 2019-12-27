@@ -69,9 +69,9 @@ def myStrategy(daily, minutely, openpricev, l, s, a, b):
         up += 1
     rsi_s = float((up) / (up + down))
 
-    if rsi_s > rsi_l or rsi_s > a:
+    if rsi_s > rsi_l and rsi_s > a:
         act = 1
-    elif rsi_s < rsi_l or rsi_s < b:
+    elif rsi_s < rsi_l and rsi_s < b:
         act = -1
     else:
         act = 0
@@ -138,7 +138,7 @@ def search_optimize():
                 best_b = b
                 best_rr = rr
 
-    overall_best = '\nOverall best settings: l = %d, s = %d, a = %f, b = %f rr = %f, '%(best_l, best_s, best_a, best_a, best_rr)
+    overall_best = '\nOverall best settings: l = %d, s = %d, a = %f, b = %f rr = %f, '%(best_l, best_s, best_a, best_b, best_rr)
     print(overall_best)
 
 search_optimize()
