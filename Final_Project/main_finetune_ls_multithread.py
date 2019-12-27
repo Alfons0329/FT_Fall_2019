@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os, sys, threading, time
 
-assert len(sys.argv) == 5, 'Usage: python3 main_multithread.py <THREAD_CNT> <min_search> <max_search> <type_eval, 0 for daily, 1 for minutely>'
+assert len(sys.argv) == 5, 'Usage: python3 main_finetune_ls_multithread.py <THREAD_CNT> <min_search> <max_search> <type_eval, 0 for daily, 1 for minutely>'
 THREAD_CNT = int(sys.argv[1])
 min_search = int(sys.argv[2])
 max_search = int(sys.argv[3])
