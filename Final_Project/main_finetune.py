@@ -1,26 +1,37 @@
 #!/usr/bin/env python
 # coding: utf-8
+'''
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+
+import torch
+import torch.autograd as autograd
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+
+from pandas import DataFrame, read_csv
+import pandas as pd
+
+import matplotlib.pyplot as plt
+
+import numpy as np
+import regex as re
+'''
 import os, sys, math
 import sys
 import numpy as np
 import pandas as pd
 
-'''
-Progress log note;
+############## args ###############
 
-12/20: Try using the brute force search like HW2, but trying with daily scale approach
-'''
-
-min_l = int(sys.argv[1])
-max_l = int(sys.argv[2])
+best_l = int(sys.argv[1])
+best_s = int(sys.argv[2])
 type_eval = int(sys.argv[3])
-print('search between [%d, %d) type_eval %d'%(min_l, max_l, type_eval))
-f_name = 'search_' + str(min_l) + '_' + str(max_l) + '.txt'
+precision = float(sys.argv[4])
+min_search = float(sys.argv[5])
+max_search = float(sys.argv[6])
 
-with open(f_name, 'w') as myfile:
-    myfile.write(f_name)
-
-myfile.close()
+print('Fine tune with best_l %d best_s %d type_eval %d precision %f min_search %f max_search %f' % (best_l, best_s, type_eval, precision, min_search, max_search))
 
 def myStrategy(daily, minutely, openpricev, l, s, a, b):
     act = 0
@@ -58,9 +69,9 @@ def myStrategy(daily, minutely, openpricev, l, s, a, b):
         up += 1
     rsi_s = float((up) / (up + down))
 
-    if rsi_s > rsi_l:
+    if rsi_s > rsi_l or rsi_s > a:
         act = 1
-    elif rsi_s < rsi_l:
+    elif rsi_s < rsi_l or rsi_s < b:
         act = -1
     else:
         act = 0
@@ -114,34 +125,20 @@ def evaluate(l, s, a, b):
 
 def search_optimize():
     best_rr = -1000.00
-
-    best_l = 0
-    best_s = 0
-    list_a = np.arange(0.5, 1.0, 0.05)
-    list_b = np.arange(0.0, 0.5, 0.05)
     best_a = 0
     best_b = 0
 
-    for l in range(min_l, max_l, 1):
-        min_s = l * 9 // 10
-        for s in range(min_s, l):
-            a = 0
-            b = 1
-            rr = evaluate(l, s, a, b)
+    alist = np.arange(min_search, max_search, precision)
+    blist = np.arange(0, 1, precision)
+    for a in alist:
+        for b in blist:
+            rr = evaluate(best_l, best_s, a, b)
             if rr > best_rr:
-                best_l = l
-                best_s = s
                 best_a = a
                 best_b = b
                 best_rr = rr
-                current_best = 'Current best settings: l = %d, s = %d, a = %f, b = %f rr = %f'%(best_l, best_s, best_a, best_a, best_rr)
 
     overall_best = '\nOverall best settings: l = %d, s = %d, a = %f, b = %f rr = %f, '%(best_l, best_s, best_a, best_a, best_rr)
     print(overall_best)
-
-    with open(f_name, 'a') as myfile:
-        myfile.write(overall_best)
-
-    myfile.close()
 
 search_optimize()
