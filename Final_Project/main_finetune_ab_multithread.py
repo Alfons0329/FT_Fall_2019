@@ -22,7 +22,7 @@ class mythread(threading.Thread):
 
     def run(self):
         cnt = self.num
-        exe = 'python3 main_finetune.py ' + str(best_l) + ' ' + str(best_s) + ' ' + str(type_eval) + ' ' + str(precision) + ' ' + str(cnt * scale) + ' ' + str((cnt + 1) * scale)
+        exe = 'python3 main_finetune_ab.py ' + str(best_l) + ' ' + str(best_s) + ' ' + str(type_eval) + ' ' + str(precision) + ' ' + str(cnt * scale) + ' ' + str((cnt + 1) * scale)
         os.system(exe)
 
 threads = []
