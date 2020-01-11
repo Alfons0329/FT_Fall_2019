@@ -1,5 +1,5 @@
-# FT_Fall_2019 國立台灣大學資訊工程學系，金融科技導論
-Fin Tech 2019 by Roger Jang, Han, Jimmy Chen@ CS NTU Taiwan
+# 國立台灣大學資訊工程學系，金融科技導論
+Fin Tech 2019 by Roger Jang, Han, Jimmy Chen@ CSIE NTU Taiwan
 授課教師： 張智星、韓傳祥、陳君明
 
 ## Homeworks (Click the link for homework explanation)
